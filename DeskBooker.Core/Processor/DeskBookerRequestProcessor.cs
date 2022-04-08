@@ -1,12 +1,14 @@
-﻿namespace DeskBooker.Core.Processor
+﻿using DeskBooker.Core.Domain;
+
+namespace DeskBooker.Core.Processor
 {
-    internal class DeskBookerRequestProcessor
+    public class DeskBookerRequestProcessor
     {
         public DeskBookerRequestProcessor()
         {
         }
 
-        internal DeskBookingResult BookDesk(DeskBookingRequest request)
+        public DeskBookingResult BookDesk(DeskBookingRequest request)
         {
             return new DeskBookingResult
             {
