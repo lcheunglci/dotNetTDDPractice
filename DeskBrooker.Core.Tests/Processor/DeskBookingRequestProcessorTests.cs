@@ -69,11 +69,11 @@ namespace DeskBooker.Core.Processor
             _deskBookingRepositoryMock.Verify(x => x.Save(It.IsAny<DeskBooking>()), Times.Once);
 
             Assert.NotNull(savedDeskBooking);
-            Assert.Equal(_request.FirstName, savedDeskBooking.FirstName);
-            Assert.Equal(_request.LastName, savedDeskBooking.LastName);
-            Assert.Equal(_request.Email, savedDeskBooking.Email);
-            Assert.Equal(_request.Date, savedDeskBooking.Date);
-            Assert.Equal(_availableDesk.First().Id, savedDeskBooking.DeskId);
+            Assert.Equal(_request.FirstName, savedDeskBooking?.FirstName);
+            Assert.Equal(_request.LastName, savedDeskBooking?.LastName);
+            Assert.Equal(_request.Email, savedDeskBooking?.Email);
+            Assert.Equal(_request.Date, savedDeskBooking?.Date);
+            Assert.Equal(_availableDesk.First().Id, savedDeskBooking?.DeskId);
         }
 
         [Fact]
