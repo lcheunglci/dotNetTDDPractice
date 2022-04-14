@@ -122,8 +122,6 @@ namespace DeskBooker.Web.Pages
 
             _deskBookingResult.DeskBookingId = 7;
             _deskBookingResult.FirstName = "John";
-            _deskBookingResult.LastName = "Doe";
-            _deskBookingResult.Email = "test@test.com";
             _deskBookingResult.Date = new DateTime(2022, 1, 2);
 
             // Act
@@ -135,21 +133,13 @@ namespace DeskBooker.Web.Pages
             Assert.Equal("BookDeskConfirmation", redirectToPageResult.PageName);
 
             IDictionary<string, object> routeValues = redirectToPageResult.RouteValues;
-            Assert.Equal(5, routeValues.Count);
+            Assert.Equal(3, routeValues.Count);
 
             var deskBookingId = Assert.Contains("DeskBookingId", routeValues);
             Assert.Equal(_deskBookingResult.DeskBookingId, deskBookingId);
 
-            var email = Assert.Contains("Email", routeValues);
-            Assert.Equal(_deskBookingResult.Email, email);
-
             var firstName = Assert.Contains("FirstName", routeValues);
             Assert.Equal(_deskBookingResult.FirstName, firstName);
-
-            var lastName = Assert.Contains("LastName", routeValues);
-            Assert.Equal(_deskBookingResult.LastName, lastName);
-
-
         }
 
     }
