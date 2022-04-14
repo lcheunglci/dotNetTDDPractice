@@ -1,6 +1,9 @@
 ﻿using DeskBooker.Core.Domain;
 using DeskBooker.Core.Processor;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Moq;
+using System;
 using Xunit;
 
 namespace DeskBooker.Web.Pages
@@ -84,5 +87,31 @@ namespace DeskBooker.Web.Pages
             // Assert
             Assert.DoesNotContain("DeskBookingRequest.Date", _bookDeskModel.ModelState);
         }
+
+        [Theory]
+        [InlineData(typeof(PageResult), false, null)]
+        [InlineData(typeof(PageResult), true, DeskBookingResultCode.NoDeskAvailable)]
+        [InlineData(typeof(RedirectToPageResult), true, DeskBookingResultCode.Success)]
+        public void ShuoldReturnExpectedActionResult(Type expectedActionResultType, bool isModelValid, DeskBookingResultCode? deskBookingResultCode)
+        {
+            // Arrange
+            if (!isModelValid)
+            {
+                _bookDeskModel.ModelState.AddModelError("JustAKey", "AnErrorMessage");
+            }
+
+            if (deskBookingResultCode.HasValue)
+            {
+                _deskBookingResult.Code = deskBookingResultCode.Value;
+            }
+
+            // Act
+            IActionResult actionResult = _bookDeskModel.OnPost();
+
+            // Assert
+            Assert.IsType(expectedActionResultType, actionResult);
+
+        }
+
     }
 }
