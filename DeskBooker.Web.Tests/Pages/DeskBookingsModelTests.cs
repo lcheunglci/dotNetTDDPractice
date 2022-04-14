@@ -13,10 +13,10 @@ namespace DeskBooker.Web.Pages
             // Arrange
             var deskBookings = new[]
             {
-        new DeskBooking(),
-        new DeskBooking(),
-        new DeskBooking(),
-      };
+                new DeskBooking(),
+                new DeskBooking(),
+                new DeskBooking(),
+            };
 
             var deskBookingRepositoryMock = new Mock<IDeskBookingRepository>();
             deskBookingRepositoryMock.Setup(x => x.GetAll())
