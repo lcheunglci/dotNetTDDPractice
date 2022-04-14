@@ -7,18 +7,19 @@ namespace DeskBooker.Web.Pages
 {
     public class BookDeskModel : PageModel
     {
-        public BookDeskModel(IDeskBookingRequestProcessor @object)
+        private readonly IDeskBookingRequestProcessor _deskBookingRequestProcessor;
+
+        public BookDeskModel(IDeskBookingRequestProcessor deskBookingRequestProcessor)
         {
-            Object = @object;
+            _deskBookingRequestProcessor = deskBookingRequestProcessor;
         }
 
         [BindProperty]
         public DeskBookingRequest DeskBookingRequest { get; set; }
-        public IDeskBookingRequestProcessor Object { get; }
 
         public void OnPost()
         {
-
+            _deskBookingRequestProcessor.BookDesk(DeskBookingRequest);
         }
     }
 }
