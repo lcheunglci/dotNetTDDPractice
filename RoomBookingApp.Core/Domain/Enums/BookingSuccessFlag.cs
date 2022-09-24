@@ -1,6 +1,6 @@
 ﻿namespace RoomBookingApp.Core.Domain.Enums
 {
-    public enum BookingSuccessFlag
+    public enum BookingResultFlag
     {
         Success,
         Failure

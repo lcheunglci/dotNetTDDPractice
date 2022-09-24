@@ -90,9 +90,9 @@ namespace RoomBookingApp.Core
         }
 
         [Theory]
-        [InlineData(BookingSuccessFlag.Failure, false)]
-        [InlineData(BookingSuccessFlag.Success, true)]
-        public void Should_Return_Success_Flag_In_Result(BookingSuccessFlag bookingSuccessFlag, bool isAvailable)
+        [InlineData(BookingResultFlag.Failure, false)]
+        [InlineData(BookingResultFlag.Success, true)]
+        public void Should_Return_Success_Flag_In_Result(BookingResultFlag bookingSuccessFlag, bool isAvailable)
         {
             if (!isAvailable)
             {
