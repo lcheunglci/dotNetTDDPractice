@@ -1,4 +1,4 @@
-﻿namespace RoomBookingApp.Core.Domain.Enums
+﻿namespace RoomBookingApp.Core.Enums
 {
     public enum BookingResultFlag
     {
