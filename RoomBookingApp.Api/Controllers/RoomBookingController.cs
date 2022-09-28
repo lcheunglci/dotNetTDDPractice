@@ -17,7 +17,18 @@ namespace RoomBookingApp.Api.Controllers
 
         public async Task<IActionResult> BookRoom(RoomBookingRequest request)
         {
-            throw new NotImplementedException();
+            if (ModelState.IsValid)
+            {
+                var result = _roomBookingRequestProcessor.BookRoom(request);
+                if (result.Flag == Core.Enums.BookingResultFlag.Success)
+                {
+                    return Ok(result);
+                }
+
+                ModelState.AddModelError(nameof(RoomBookingRequest.Date), "No Rooms Available for Given Date");
+            }
+
+            return BadRequest(ModelState);
         }
     }
 }
