@@ -14,11 +14,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = "DataSource=:memory";
+var connectionString = "Filename=:memory";
 var conn = new SqliteConnection(connectionString);
 conn.Open();
 
 builder.Services.AddDbContext<RoomBookingAppDbContext>(options => options.UseSqlite(conn));
+
+EnsureDatabaseCreated(conn);
+
+static void EnsureDatabaseCreated(SqliteConnection conn)
+{
+    var builder = new DbContextOptionsBuilder<RoomBookingAppDbContext>();
+    builder.UseSqlite(conn);
+
+    using var context = new RoomBookingAppDbContext(builder.Options);
+    context.Database.EnsureCreated();
+}
 
 builder.Services.AddScoped<IRoomBookingService, RoomBookingService>();
 
