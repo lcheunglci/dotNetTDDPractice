@@ -1,3 +1,5 @@
+using Moq;
+using WiredBrainCoffee.CupOrderAdmin.Core.DataInterfaces;
 using WiredBrainCoffee.CupOrderAdmin.Core.Model;
 using WiredBrainCoffee.CupOrderAdmin.Core.Services.OrderCreation;
 
@@ -9,10 +11,18 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
         [TestMethod]
         public async Task ShouldStoreCreatedOrderInOrderCreationResult()
         {
-            var orderCreationService = new OrderCreationService(null, null);
+            var orderRepositoryMock = new Mock<IOrderRepository>();
+            orderRepositoryMock.Setup(x =>
+            x.SaveAsync(It.IsAny<Order>())).ReturnsAsync((Order x) => x);
+
+
+
+            var coffeeCupRepositoryMock = new Mock<ICoffeeCupRepository>();
+            
+            var orderCreationService = new OrderCreationService(orderRepositoryMock.Object, coffeeCupRepositoryMock.Object);
 
             var numberOfOrderedCups = 1;
-            var customer = new Customer();
+            var customer = new Customer { Id = 99 } ;
 
 
             var orderCreationResult =
