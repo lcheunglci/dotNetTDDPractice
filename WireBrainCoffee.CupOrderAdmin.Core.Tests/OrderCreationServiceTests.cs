@@ -1,3 +1,4 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using WiredBrainCoffee.CupOrderAdmin.Core.DataInterfaces;
 using WiredBrainCoffee.CupOrderAdmin.Core.Model;
@@ -55,9 +56,19 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
 
             Assert.AreEqual(OrderCreationResultCode.Success, orderCreationResult.ResultCode);
             Assert.AreEqual(expectedRemainingCupsInStock, orderCreationResult.RemainingCupsInStock);
+        }
 
+        [TestMethod]
+        public async Task ShouldReturnStockExceededResultIfNotEnoughCupsInStock()
+        {
+            var numberOfOrderCups = _numberOfCupsInStock + 1;
+            var customer = new Customer();
 
+            var orderCreationResult =
+                await _orderCreationService.CreateOrderAsync(customer, numberOfOrderCups);
 
+            Assert.AreEqual(OrderCreationResultCode.StockExceeded, orderCreationResult.ResultCode);
+            Assert.AreEqual(_numberOfCupsInStock, orderCreationResult.RemainingCupsInStock);
 
         }
     }

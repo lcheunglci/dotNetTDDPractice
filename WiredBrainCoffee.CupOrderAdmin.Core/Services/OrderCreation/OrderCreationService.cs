@@ -29,16 +29,27 @@ namespace WiredBrainCoffee.CupOrderAdmin.Core.Services.OrderCreation
 
             var numberOfCupsInStock = await _coffeeCupRepository.GetCoffeeCupsInStockCountAsync();
 
-            // TODO: Return StockExceeded result code if not enough cups in stock
+            var areEnoughCupsInStock = numberOfOrderedCups <= numberOfCupsInStock;
 
-            Order createdOrder = await CreateOrderInternalAsync(customer, numberOfOrderedCups);
-
-            result = new OrderCreationResult
+            if (areEnoughCupsInStock)
             {
-                ResultCode = OrderCreationResultCode.Success,
-                CreatedOrder = createdOrder,
-                RemainingCupsInStock = numberOfCupsInStock - numberOfOrderedCups
-            };
+                Order createdOrder = await CreateOrderInternalAsync(customer, numberOfOrderedCups);
+
+                result = new OrderCreationResult
+                {
+                    ResultCode = OrderCreationResultCode.Success,
+                    CreatedOrder = createdOrder,
+                    RemainingCupsInStock = numberOfCupsInStock - numberOfOrderedCups
+                };
+            }
+            else
+            {
+                result = new OrderCreationResult
+                {
+                    ResultCode = OrderCreationResultCode.StockExceeded,
+                    RemainingCupsInStock = numberOfCupsInStock
+                };
+            }
 
             return result;
         }
