@@ -1,3 +1,4 @@
+using Castle.Core.Resource;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using WiredBrainCoffee.CupOrderAdmin.Core.DataInterfaces;
@@ -71,6 +72,33 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
             Assert.AreEqual(_numberOfCupsInStock, orderCreationResult.RemainingCupsInStock);
 
         }
+
+        [TestMethod]
+        public async Task ShouldThrowExceptionIfNumberOfOrderedCupsIsLessThanOne()
+        {
+            var numberOfOrderCups = 0;
+            var customer = new Customer();
+
+            var exception = await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>( () =>
+                _orderCreationService.CreateOrderAsync(customer, numberOfOrderCups));
+
+            Assert.AreEqual("numberOfOrderedCups", exception.ParamName);
+
+        }
+
+        [TestMethod]
+        public async Task ShouldThrowExceptionIfCustomerIsNull() 
+        {
+            var numberOfOrderCups = 1;
+
+            var exception = await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() =>
+            _orderCreationService.CreateOrderAsync(null, numberOfOrderCups));
+
+            Assert.AreEqual("customer", exception.ParamName);
+
+
+        }
+
     }
 
 
