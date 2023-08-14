@@ -70,6 +70,8 @@ namespace WiredBrainCoffee.CupOrderAdmin.Core.Services.OrderCreation
             //      
             //       Premium customers get 5% in addition
 
+            
+
             return discountInPercent;
         }
 
