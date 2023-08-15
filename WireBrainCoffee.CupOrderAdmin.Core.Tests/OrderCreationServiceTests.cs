@@ -81,7 +81,7 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
             var numberOfOrderCups = 0;
             var customer = new Customer();
 
-            var exception = await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>( () =>
+            var exception = await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() =>
                 _orderCreationService.CreateOrderAsync(customer, numberOfOrderCups));
 
             Assert.AreEqual("numberOfOrderedCups", exception.ParamName);
@@ -89,7 +89,7 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
         }
 
         [TestMethod]
-        public async Task ShouldThrowExceptionIfCustomerIsNull() 
+        public async Task ShouldThrowExceptionIfCustomerIsNull()
         {
             var numberOfOrderCups = 1;
 
@@ -101,30 +101,22 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
         }
 
 
-        [TestMethod]
-        public async Task ShouldCalculateCorrectDiscountPercentage() {
-            var numberOfOrderedCups = 5;
-            var customer = new Customer {Membership = CustomerMembership.Basic};
+        [DataTestMethod]
+        [DataRow(3, 5)]
+        [DataRow(0, 4)]
+        public async Task ShouldCalculateCorrectDiscountPercentage(double expectedDiscountInPercent, int numberOfOrderedCups)
+        {
+
+            var customer = new Customer { Membership = CustomerMembership.Basic };
 
             var orderCreationResult = await _orderCreationService.CreateOrderAsync(customer, numberOfOrderedCups);
 
             Assert.AreEqual(OrderCreationResultCode.Success, orderCreationResult.ResultCode);
-            Assert.AreEqual(3, orderCreationResult.CreatedOrder.DiscountInPercent);
+            Assert.AreEqual(expectedDiscountInPercent, orderCreationResult.CreatedOrder.DiscountInPercent);
 
         }
 
 
-        [TestMethod]
-        public async Task ShouldCalculateCorrectDiscountPercentage2() {
-            var numberOfOrderedCups = 5;
-            var customer = new Customer {Membership = CustomerMembership.Basic};
-
-            var orderCreationResult = await _orderCreationService.CreateOrderAsync(customer, numberOfOrderedCups);
-
-            Assert.AreEqual(OrderCreationResultCode.Success, orderCreationResult.ResultCode);
-            Assert.AreEqual(0, orderCreationResult.CreatedOrder.DiscountInPercent);
-
-        }
 
     }
 
