@@ -106,15 +106,11 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
         [DataRow(0, 4, CustomerMembership.Basic)]
         [DataRow(8, 5, CustomerMembership.Premium)]
         [DataRow(5, 4, CustomerMembership.Premium)]
-        public async Task ShouldCalculateCorrectDiscountPercentage(double expectedDiscountInPercent, int numberOfOrderedCups, CustomerMembership customerMembership)
+        public void ShouldCalculateCorrectDiscountPercentage(double expectedDiscountInPercent, int numberOfOrderedCups, CustomerMembership customerMembership)
         {
+            var discountPercentage = OrderCreationService.CalculateDiscountPercentage(customerMembership, numberOfOrderedCups);
 
-            var customer = new Customer { Membership = customerMembership };
-
-            var orderCreationResult = await _orderCreationService.CreateOrderAsync(customer, numberOfOrderedCups);
-
-            Assert.AreEqual(OrderCreationResultCode.Success, orderCreationResult.ResultCode);
-            Assert.AreEqual(expectedDiscountInPercent, orderCreationResult.CreatedOrder.DiscountInPercent);
+            Assert.AreEqual(expectedDiscountInPercent, discountPercentage);
 
         }
 

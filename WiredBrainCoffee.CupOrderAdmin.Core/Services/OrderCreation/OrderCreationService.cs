@@ -58,7 +58,7 @@ namespace WiredBrainCoffee.CupOrderAdmin.Core.Services.OrderCreation
             return result;
         }
 
-        private static double CalculateDiscountPercentage(CustomerMembership membership,
+        internal static double CalculateDiscountPercentage(CustomerMembership membership,
           int numberOfOrderedCups)
         {
             var discountInPercent = 0.0;
