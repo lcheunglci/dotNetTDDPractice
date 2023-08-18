@@ -1,22 +1,20 @@
 using Moq;
-using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 using WiredBrainCoffee.CupOrderAdmin.Core.DataInterfaces;
 using WiredBrainCoffee.CupOrderAdmin.Core.Model;
 using WiredBrainCoffee.CupOrderAdmin.Core.Model.Enums;
 using WiredBrainCoffee.CupOrderAdmin.Core.Services.OrderCreation;
+using Xunit;
 
 namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
 {
-    [TestFixture]
     public class OrderCreationServiceTests
     {
         private OrderCreationService _orderCreationService;
         private int _numberOfCupsInStock;
 
-        [SetUp]
-        public void TestInitialize()
+        public OrderCreationServiceTests()
         {
             _numberOfCupsInStock = 10;
             var orderRepositoryMock = new Mock<IOrderRepository>();
@@ -31,7 +29,7 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
 
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldStoreCreatedOrderInOrderCreationResult()
         {
 
@@ -41,13 +39,13 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
             var orderCreationResult =
                 await _orderCreationService.CreateOrderAsync(customer, numberOfOrderedCups);
 
-            Assert.AreEqual(OrderCreationResultCode.Success, orderCreationResult.ResultCode);
-            Assert.IsNotNull(orderCreationResult.CreatedOrder);
-            Assert.AreEqual(customer.Id, orderCreationResult.CreatedOrder.CustomerId);
+            Assert.Equal(OrderCreationResultCode.Success, orderCreationResult.ResultCode);
+            Assert.NotNull(orderCreationResult.CreatedOrder);
+            Assert.Equal(customer.Id, orderCreationResult.CreatedOrder.CustomerId);
 
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldStoreRemainingCupsInStockInOrderCreationResult()
         {
             var numberOfOrderedCups = 3;
@@ -57,11 +55,11 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
             var orderCreationResult =
                 await _orderCreationService.CreateOrderAsync(customer, numberOfOrderedCups);
 
-            Assert.AreEqual(OrderCreationResultCode.Success, orderCreationResult.ResultCode);
-            Assert.AreEqual(expectedRemainingCupsInStock, orderCreationResult.RemainingCupsInStock);
+            Assert.Equal(OrderCreationResultCode.Success, orderCreationResult.ResultCode);
+            Assert.Equal(expectedRemainingCupsInStock, orderCreationResult.RemainingCupsInStock);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldReturnStockExceededResultIfNotEnoughCupsInStock()
         {
             var numberOfOrderCups = _numberOfCupsInStock + 1;
@@ -70,49 +68,49 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
             var orderCreationResult =
                 await _orderCreationService.CreateOrderAsync(customer, numberOfOrderCups);
 
-            Assert.AreEqual(OrderCreationResultCode.StockExceeded, orderCreationResult.ResultCode);
-            Assert.AreEqual(_numberOfCupsInStock, orderCreationResult.RemainingCupsInStock);
+            Assert.Equal(OrderCreationResultCode.StockExceeded, orderCreationResult.ResultCode);
+            Assert.Equal(_numberOfCupsInStock, orderCreationResult.RemainingCupsInStock);
 
         }
 
-        [Test]
-        public void ShouldThrowExceptionIfNumberOfOrderedCupsIsLessThanOne()
+        [Fact]
+        public async Task ShouldThrowExceptionIfNumberOfOrderedCupsIsLessThanOne()
         {
             var numberOfOrderCups = 0;
             var customer = new Customer();
 
-            var exception = Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
                 _orderCreationService.CreateOrderAsync(customer, numberOfOrderCups));
 
-            Assert.AreEqual("numberOfOrderedCups", exception.ParamName);
+            Assert.Equal("numberOfOrderedCups", exception.ParamName);
 
         }
 
-        [Test]
-        public void ShouldThrowExceptionIfCustomerIsNull()
+        [Fact]
+        public async Task ShouldThrowExceptionIfCustomerIsNull()
         {
             var numberOfOrderCups = 1;
 
-            var exception = Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
             _orderCreationService.CreateOrderAsync(null, numberOfOrderCups));
 
-            Assert.AreEqual("customer", exception.ParamName);
+            Assert.Equal("customer", exception.ParamName);
 
         }
 
 
-        
-        [TestCase(3, 5, CustomerMembership.Basic)]
-        [TestCase(0, 4, CustomerMembership.Basic)]
-        [TestCase(0, 1, CustomerMembership.Basic)]
-        [TestCase(8, 5, CustomerMembership.Premium)]
-        [TestCase(5, 4, CustomerMembership.Premium)]
-        [TestCase(5, 1, CustomerMembership.Premium)]
+        [Theory]
+        [InlineData(3, 5, CustomerMembership.Basic)]
+        [InlineData(0, 4, CustomerMembership.Basic)]
+        [InlineData(0, 1, CustomerMembership.Basic)]
+        [InlineData(8, 5, CustomerMembership.Premium)]
+        [InlineData(5, 4, CustomerMembership.Premium)]
+        [InlineData(5, 1, CustomerMembership.Premium)]
         public void ShouldCalculateCorrectDiscountPercentage(double expectedDiscountInPercent, int numberOfOrderedCups, CustomerMembership customerMembership)
         {
             var discountPercentage = OrderCreationService.CalculateDiscountPercentage(customerMembership, numberOfOrderedCups);
 
-            Assert.AreEqual(expectedDiscountInPercent, discountPercentage);
+            Assert.Equal(expectedDiscountInPercent, discountPercentage);
 
         }
 
