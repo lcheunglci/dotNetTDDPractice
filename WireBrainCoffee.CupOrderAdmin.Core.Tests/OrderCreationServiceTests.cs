@@ -1,5 +1,5 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 using WiredBrainCoffee.CupOrderAdmin.Core.DataInterfaces;
@@ -9,13 +9,13 @@ using WiredBrainCoffee.CupOrderAdmin.Core.Services.OrderCreation;
 
 namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class OrderCreationServiceTests
     {
         private OrderCreationService _orderCreationService;
         private int _numberOfCupsInStock;
 
-        [TestInitialize]
+        [SetUp]
         public void TestInitialize()
         {
             _numberOfCupsInStock = 10;
@@ -31,7 +31,7 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
 
         }
 
-        [TestMethod]
+        [Test]
         public async Task ShouldStoreCreatedOrderInOrderCreationResult()
         {
 
@@ -47,7 +47,7 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
 
         }
 
-        [TestMethod]
+        [Test]
         public async Task ShouldStoreRemainingCupsInStockInOrderCreationResult()
         {
             var numberOfOrderedCups = 3;
@@ -61,7 +61,7 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
             Assert.AreEqual(expectedRemainingCupsInStock, orderCreationResult.RemainingCupsInStock);
         }
 
-        [TestMethod]
+        [Test]
         public async Task ShouldReturnStockExceededResultIfNotEnoughCupsInStock()
         {
             var numberOfOrderCups = _numberOfCupsInStock + 1;
@@ -75,25 +75,25 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
 
         }
 
-        [TestMethod]
-        public async Task ShouldThrowExceptionIfNumberOfOrderedCupsIsLessThanOne()
+        [Test]
+        public void ShouldThrowExceptionIfNumberOfOrderedCupsIsLessThanOne()
         {
             var numberOfOrderCups = 0;
             var customer = new Customer();
 
-            var exception = await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() =>
+            var exception = Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
                 _orderCreationService.CreateOrderAsync(customer, numberOfOrderCups));
 
             Assert.AreEqual("numberOfOrderedCups", exception.ParamName);
 
         }
 
-        [TestMethod]
-        public async Task ShouldThrowExceptionIfCustomerIsNull()
+        [Test]
+        public void ShouldThrowExceptionIfCustomerIsNull()
         {
             var numberOfOrderCups = 1;
 
-            var exception = await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() =>
+            var exception = Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
             _orderCreationService.CreateOrderAsync(null, numberOfOrderCups));
 
             Assert.AreEqual("customer", exception.ParamName);
@@ -101,13 +101,13 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
         }
 
 
-        [DataTestMethod]
-        [DataRow(3, 5, CustomerMembership.Basic)]
-        [DataRow(0, 4, CustomerMembership.Basic)]
-        [DataRow(0, 1, CustomerMembership.Basic)]
-        [DataRow(8, 5, CustomerMembership.Premium)]
-        [DataRow(5, 4, CustomerMembership.Premium)]
-        [DataRow(5, 1, CustomerMembership.Premium)]
+        
+        [TestCase(3, 5, CustomerMembership.Basic)]
+        [TestCase(0, 4, CustomerMembership.Basic)]
+        [TestCase(0, 1, CustomerMembership.Basic)]
+        [TestCase(8, 5, CustomerMembership.Premium)]
+        [TestCase(5, 4, CustomerMembership.Premium)]
+        [TestCase(5, 1, CustomerMembership.Premium)]
         public void ShouldCalculateCorrectDiscountPercentage(double expectedDiscountInPercent, int numberOfOrderedCups, CustomerMembership customerMembership)
         {
             var discountPercentage = OrderCreationService.CalculateDiscountPercentage(customerMembership, numberOfOrderedCups);
