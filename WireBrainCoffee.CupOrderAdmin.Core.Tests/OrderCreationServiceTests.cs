@@ -104,8 +104,10 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
         [DataTestMethod]
         [DataRow(3, 5, CustomerMembership.Basic)]
         [DataRow(0, 4, CustomerMembership.Basic)]
+        [DataRow(0, 1, CustomerMembership.Basic)]
         [DataRow(8, 5, CustomerMembership.Premium)]
         [DataRow(5, 4, CustomerMembership.Premium)]
+        [DataRow(5, 1, CustomerMembership.Premium)]
         public void ShouldCalculateCorrectDiscountPercentage(double expectedDiscountInPercent, int numberOfOrderedCups, CustomerMembership customerMembership)
         {
             var discountPercentage = OrderCreationService.CalculateDiscountPercentage(customerMembership, numberOfOrderedCups);
