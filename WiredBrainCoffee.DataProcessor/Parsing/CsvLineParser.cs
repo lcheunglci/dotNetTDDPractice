@@ -11,7 +11,8 @@ namespace WiredBrainCoffee.DataProcessor.Parsing
 
             foreach (var csvLine in csvlines)
             {
-                if (string.IsNullOrWhiteSpace(csvLine)) {
+                if (string.IsNullOrWhiteSpace(csvLine))
+                {
                     continue;
                 }
                 var machineDataItem = Parse(csvLine);
@@ -25,6 +26,11 @@ namespace WiredBrainCoffee.DataProcessor.Parsing
         private static MachineDataItem Parse(string csvLine)
         {
             var lineItems = csvLine.Split(';');
+
+            if (lineItems.Length != 2)
+            {
+                throw new Exception();
+            }
 
             return new MachineDataItem(lineItems[0], DateTime.Parse(lineItems[1], CultureInfo.InvariantCulture));
         }
