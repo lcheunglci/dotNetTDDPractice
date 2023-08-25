@@ -1,4 +1,5 @@
-﻿using WiredBrainCoffee.DataProcessor.Model;
+﻿using WiredBrainCoffee.DataProcessor.Data;
+using WiredBrainCoffee.DataProcessor.Model;
 
 namespace WiredBrainCoffee.DataProcessor.Processing
 {
@@ -8,7 +9,7 @@ namespace WiredBrainCoffee.DataProcessor.Processing
         public void ShouldSaveCountPerCoffeeType()
         {
             // Arrange
-            var machineDataProcessor = new MachineDataProcessor();
+            var machineDataProcessor = new MachineDataProcessor(new ConsoleCoffeeCountStore());
             var items = new[]
             {
                 new MachineDataItem("Cappuccino", new DateTime(2023,08,25,8,0,0)),
