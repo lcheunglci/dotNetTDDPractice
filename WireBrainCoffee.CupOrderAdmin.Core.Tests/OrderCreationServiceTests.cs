@@ -1,5 +1,6 @@
 using Moq;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using WiredBrainCoffee.CupOrderAdmin.Core.DataInterfaces;
 using WiredBrainCoffee.CupOrderAdmin.Core.Model;
@@ -24,6 +25,9 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
             var coffeeCupRepositoryMock = new Mock<ICoffeeCupRepository>();
             coffeeCupRepositoryMock.Setup(x => x.GetCoffeeCupsInStockCountAsync())
                 .ReturnsAsync(_numberOfCupsInStock);
+            coffeeCupRepositoryMock.Setup(x => x.GetCoffeeCupsInStockAsync(It.IsAny<int>()))
+                .ReturnsAsync((int numberOfOrderedCups) => Enumerable.Range(1,numberOfOrderedCups)
+                                                                                 .Select(x => new CoffeeCup()));
 
             _orderCreationService = new OrderCreationService(orderRepositoryMock.Object, coffeeCupRepositoryMock.Object);
 
