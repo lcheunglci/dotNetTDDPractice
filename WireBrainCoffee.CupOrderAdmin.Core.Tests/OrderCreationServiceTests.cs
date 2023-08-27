@@ -1,5 +1,6 @@
 using Moq;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using WiredBrainCoffee.CupOrderAdmin.Core.DataInterfaces;
@@ -10,6 +11,7 @@ using Xunit;
 
 namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class OrderCreationServiceTests
     {
         private OrderCreationService _orderCreationService;
