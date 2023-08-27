@@ -114,6 +114,24 @@ namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
 
         }
 
+        [Fact]
+        public void ShouldThrowArgumentNullExceptionIfOrderRepositoryIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => new OrderCreationService(null, new Mock<ICoffeeCupRepository>().Object));
+
+            Assert.Equal("orderRepository", exception.ParamName);
+        }
+
+        [Fact]
+        public void ShouldThrowArgumentNullExceptionIfCoffeeCupRepositoryIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => new OrderCreationService(new Mock<IOrderRepository>().Object, null));
+
+            Assert.Equal("coffeeCupRepository", exception.ParamName);
+        }
+
 
 
     }
