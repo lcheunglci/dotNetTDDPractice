@@ -11,7 +11,6 @@ using Xunit;
 
 namespace WireBrainCoffee.CupOrderAdmin.Core.Tests
 {
-    [ExcludeFromCodeCoverage]
     public class OrderCreationServiceTests
     {
         private OrderCreationService _orderCreationService;
