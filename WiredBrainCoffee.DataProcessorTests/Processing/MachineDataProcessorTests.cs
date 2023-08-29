@@ -23,7 +23,7 @@ namespace WiredBrainCoffee.DataProcessor.Processing
             {
                 new MachineDataItem("Cappuccino", new DateTime(2023,08,25,8,0,0)),
                 new MachineDataItem("Cappuccino", new DateTime(2023,08,25,9,0,0)),
-                new MachineDataItem("4", new DateTime(2023,08,25,10,0,0)),
+                new MachineDataItem("Espresso", new DateTime(2023,08,25,10,0,0)),
             };
 
             // Act
@@ -64,6 +64,36 @@ namespace WiredBrainCoffee.DataProcessor.Processing
                 Assert.Equal(1, item.Count);
             }
         }
+
+        [Fact]
+        public void ShouldIgnoreItemsThatAreNotNewer()
+        {
+            // Arrange
+            var items = new[]
+            {
+                new MachineDataItem("Cappuccino", new DateTime(2023,08,25,8,0,0)),
+                new MachineDataItem("Cappuccino", new DateTime(2023,08,25,7,0,0)),
+                new MachineDataItem("Cappuccino", new DateTime(2023,08,25,7,10,0)),
+                new MachineDataItem("Cappuccino", new DateTime(2023,08,25,9,0,0)),
+                new MachineDataItem("Espresso", new DateTime(2023,08,25,10,0,0)),
+                new MachineDataItem("Espresso", new DateTime(2023,08,25,10,0,0)),
+            };
+
+            // Act
+            _machineDataProcessor.ProcessItems(items);
+
+            // Assert 
+            Assert.Equal(2, _coffeeCountStore.SavedItems.Count);
+
+            var item = _coffeeCountStore.SavedItems[0];
+            Assert.Equal("Cappuccino", item.CoffeeType);
+            Assert.Equal(2, item.Count);
+
+            item = _coffeeCountStore.SavedItems[1];
+            Assert.Equal("Espresso", item.CoffeeType);
+            Assert.Equal(1, item.Count);
+        }
+
 
         public void Dispose()
         {
