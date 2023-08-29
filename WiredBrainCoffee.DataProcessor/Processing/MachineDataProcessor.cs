@@ -29,18 +29,26 @@ namespace WiredBrainCoffee.DataProcessor.Processing
 
         private void ProcessItem(MachineDataItem dataItem)
         {
-            if (_previousItem == null || _previousItem.CreatedAt < dataItem.CreatedAt)
+            if (!IsNewerThanPreviousItem(dataItem))
             {
-                if (!_countPerCoffeeType.ContainsKey(dataItem.CoffeeType))
-                {
-                    _countPerCoffeeType.Add(dataItem.CoffeeType, 1);
-                }
-                else
-                {
-                    _countPerCoffeeType[dataItem.CoffeeType]++;
-                }
+                return;
             }
+
+            if (!_countPerCoffeeType.ContainsKey(dataItem.CoffeeType))
+            {
+                _countPerCoffeeType.Add(dataItem.CoffeeType, 1);
+            }
+            else
+            {
+                _countPerCoffeeType[dataItem.CoffeeType]++;
+            }
+
             _previousItem = dataItem;
+        }
+
+        private bool IsNewerThanPreviousItem(MachineDataItem dataItem)
+        {
+            return _previousItem is null || _previousItem.CreatedAt < dataItem.CreatedAt;
         }
 
         private void SaveCountPerCoffeeType()
